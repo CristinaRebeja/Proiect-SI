@@ -23,4 +23,11 @@ CREATE TABLE [Clients](
 
 |Nume Coloană|Tip Date|Acceptă `NULL`|Observații|
 |------------|--------|--------------|---------|
-|`ClientId`|int|Nu|cheie primară|
+|ClientId|int|Nu|
+|CNP|varchar(13)|Nu|
+|Email|varchar(50)|Da|
+|FirstName|nvarchar(100)|Nu|
+|LastName|nvarchar(100)|Da|
+|Notes|nvarchar(256)|Da|
+|PhoneNumber|varchar(25)|Da|
+|UserId|int|Nu|
