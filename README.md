@@ -1,6 +1,10 @@
 # Proiect de curs Școala Informală de IT
+Acest proiect presupune realizarea unei baze de date pentru a facilita gestionarea unei firme ce oferă servicii de Internet/Tv.
+Proiectul este realizat în SQL Server Management Studio.
+
 ## Tabele
 Secțiunea curentă descrie tabelele din proiect
+
 ### Clients
 Tabelul `Clients` conține informații despre clienți.
 
