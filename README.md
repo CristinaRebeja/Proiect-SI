@@ -50,3 +50,17 @@ CREATE TABLE [Users] (
 |Name|nvarchar(100)|Nu||
 |Role|nvarchar(15)|Da||
 |IsActive|bit|Nu||
+
+### ContractStatuses
+Tabelul `ContractStatuses` conține statusurile pe care le pot avea contractele
+
+```sql
+CREATE TABLE [ContractStatuses](
+	[StatusId] [int] NOT NULL PRIMARY KEY CLUSTERED,
+	[Name] [nvarchar](20) NOT NULL);
+```
+
+|Nume Coloană|Tip Date|Acceptă `NULL`|Observații|
+|------------|--------|--------------|---------|
+|StatusId|int|Nu|cheie primară|
+|Name|nvarchar(20)|Nu||
