@@ -32,7 +32,6 @@ CREATE TABLE [Clients](
 |PhoneNumber|varchar(25)|Da||
 |UserId|int|Nu||
 
-
 ### Users
 Tabelul `Users` conține informații despre utilizatorii aplicației
 
@@ -281,6 +280,3 @@ AS
 
 GO 
 ```
-
-
-
