@@ -246,4 +246,41 @@ GO
 
 ## Funcții și Proceduri
 
+### Funcția `GetContractNumber` 
+
+Această funcție generează numerele de contracte (`Number` din tabelul `Contracts`).
+Acestea sunt de tip VARCHAR, și sunt formate din 3 litere (MPM) și 5 cifre.
+Funcția alocă primului contract numărul MPM00001.
+Pentru următoarele, verifică care este cel mai mare număr de contract (transformând partea numerică în tip INT), adaugă 1, 
+după care returnează rezultatul cu literele 'MPM' în față (transformând din nou șirul in VARCHAR).
+
+```sql
+CREATE FUNCTION GetContractNumber()
+RETURNS VARCHAR(20)
+AS
+  BEGIN
+      DECLARE @ContractNumber VARCHAR(20)
+
+      IF NOT EXISTS (SELECT 1
+                     FROM   Contracts)
+        SET @ContractNumber='MPM00001'
+      ELSE
+        BEGIN
+            DECLARE @LastContractNumber VARCHAR(20),
+                    @Num                INT
+
+            SELECT @Num = Max(Cast(RIGHT(Number, 5) AS INT))
+            FROM   Contracts
+
+            SET @Num=@Num + 1
+            SET @ContractNumber='MPM' + Format(@Num, '00000')
+        END
+
+      RETURN @ContractNumber
+  END
+
+GO 
+```
+
+
 
