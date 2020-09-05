@@ -280,3 +280,63 @@ AS
 
 GO 
 ```
+
+### Procedura `RegisterContract` 
+
+Această procedură stocată înregistrează contracte noi. 
+
+**Parametri:**
+- `@FirstName` - Prenumele clientului
+- `@LastName` - Numele clientului
+- `@CNP` - codul numeric personal
+- `@PhoneNumber` - număr de telefon
+- `@Email` - adresa de e-mail
+- `@Notes` - observații
+- `@SubscriptionId` - id-ul abonamentului
+- `@StartDate` - data de început a contractului
+- `@UserId` - id-ul angajatului care a înregistrat contractul
+
+Procedura inserează datele clientului în tabelul `Clients`, alocă un număr de contract nou apelând funcția `GetContractNumber` și inserează datele contractului în tabelul `Contracts`.
+
+```sql
+CREATE PROCEDURE RegisterContract 
+	@FirstName nvarchar(100),
+	@LastName nvarchar(100),
+	@CNP varchar(13),
+	@PhoneNumber varchar(25),
+	@Email varchar(50),
+	@Notes nvarchar(256),
+	@SubscriptionId int,
+	@StartDate date,
+	@UserId int
+	
+	AS
+BEGIN
+	SET NOCOUNT ON;
+	BEGIN TRANSACTION
+
+		INSERT INTO Clients (FirstName, LastName, CNP, PhoneNumber, Email, Notes, UserId)
+		VALUES (@FirstName, @LastName, @CNP, @PhoneNumber, @Email, @Notes, @UserId)
+		select SCOPE_IDENTITY() as ID
+		DECLARE 
+			@ClientId INT,
+			@StatusId INT = 1, --0 for Active
+			@Number VARCHAR(20),
+			@RegistrationDate DATE = GETDATE(),
+			@EndDate DATE = NULL
+		
+		SET @ClientId = SCOPE_IDENTITY();
+		SET @Number = dbo.Getcontractnumber();
+		SELECT @ClientId, @Number, SCOPE_IDENTITY();
+		
+		INSERT INTO Contracts (ClientId, StatusId, Number, SubscriptionId, RegistrationDate, StartDate, EndDate, UserId)
+		VALUES (@ClientId, @StatusId, @Number, @SubscriptionId, @RegistrationDate, @StartDate, @EndDate, @UserId)
+	COMMIT
+END
+GO 
+```
+
+Exemplu de apel:
+```SQL
+EXEC RegisterContract 'Munteanu','Vasile','1691218256358','078989894','vasilemunteanu@gmail.com','',1,'2020-05-01',123
+```
