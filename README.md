@@ -340,3 +340,25 @@ Exemplu de apel:
 ```SQL
 EXEC RegisterContract 'Munteanu','Vasile','1691218256358','078989894','vasilemunteanu@gmail.com','',1,'2020-05-01',123
 ```
+
+## Trigger `InsertPaymentTransaction`
+
+La înregistrarea/ștergerea unei plăți în tabelul `Payments`, trigger-ul inserează/șterge o tranzacție aferentă în tabelul `ContractBalanceTransactions`.
+
+```SQL
+CREATE TRIGGER InsertPaymentTransaction
+ON [dbo].[Payments]
+AFTER INSERT, DELETE
+AS
+  BEGIN
+      SET NOCOUNT ON;
+
+      INSERT INTO [dbo].[ContractBalanceTransactions]
+                  (ContractId, TransactionTypeId, Reference, Amount)
+      SELECT I.ContractId, 1, I.ExternalReference, I.Amount 
+      FROM   inserted AS I
+		UNION ALL
+      SELECT D.ContractId, 1, D.ExternalReference, -D.Amount
+      FROM   deleted AS D;
+  END
+```
