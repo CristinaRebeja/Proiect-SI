@@ -341,6 +341,33 @@ Exemplu de apel:
 EXEC RegisterContract 'Munteanu','Vasile','1691218256358','078989894','vasilemunteanu@gmail.com','',1,'2020-05-01',123
 ```
 
+### Procedura `MonthlyFee`
+
+Această procedură stocată, inserează în tabelul `ContractBalanceTransactions` câte o tranzacție pentru fiecare contract activ, cu taxa lunară aferentă abonamentului.
+
+```SQL
+CREATE PROCEDURE MonthlyFee 
+AS
+	BEGIN
+		SET NOCOUNT ON
+		--@TransactionType INT = 2 --MonthlyFee
+		INSERT INTO [dbo].[ContractBalanceTransactions] (ContractId, TransactionTypeId, Amount)
+		SELECT C.ContractId, 2, -S.Fee
+		FROM Contracts C
+			JOIN Subscriptions S ON C.SubscriptionId=S.SubscriptionId
+			JOIN ContractStatuses CS ON CS.StatusId=C.StatusId
+		WHERE CS.Name='Active'
+	END
+GO
+```
+Procedura trebuie rulată lunar, pentru a actualiza soldul contractelor.
+Întrucât acest proiect a fost realizat în versiunea Express a SQL Server, nu am avut opțiunea de a face un job care să ruleze procedura automat în fiecare lună.
+Pentru a executa procedura stocată în fiecare lună, am folosit componenta Task Scheduler de la Windows. Am creat un task separat, care rulează procedura pe data de 1 a fiecărei luni, la ora 01.00.
+
+```shell
+sqlcmd -S localhost -E -d Proiect -Q "exec MonthlyFee"
+```
+
 ## Trigger `InsertPaymentTransaction`
 
 La înregistrarea/ștergerea unei plăți în tabelul `Payments`, trigger-ul inserează/șterge o tranzacție aferentă în tabelul `ContractBalanceTransactions`.
