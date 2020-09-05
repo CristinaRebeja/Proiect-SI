@@ -208,6 +208,24 @@ EXEC RegisterContract 'Vlad','Andrei','1800608469521','07898123','andreivlad@gma
 EXEC RegisterContract 'Voronet','Sucevel','1700610469521','078325123','voronet@gmail.com','',5,'2020-05-01',124
 
 go
+
+--PROCEDURA STOCATA CE ADAUGA TAXA LUNARA IN BALANTA CONTRACTELOR ACTIVE
+
+CREATE PROCEDURE MonthlyFee 
+	--@TransactionType INT = 2 --MonthlyFee
+AS
+	BEGIN
+		SET NOCOUNT ON
+
+		INSERT INTO [dbo].[ContractBalanceTransactions] (ContractId, TransactionTypeId, Amount)
+		SELECT C.ContractId, 2, -S.Fee
+		FROM Contracts C
+			JOIN Subscriptions S ON C.SubscriptionId=S.SubscriptionId
+			JOIN ContractStatuses CS ON CS.StatusId=C.StatusId
+		WHERE CS.Name='Active'
+
+	END
+
 --TRIGGER - INSEREAZA TRANZACTII CAND SE INSEREAZA/STERG PLATI
 CREATE TRIGGER InsertPaymentTransaction
 ON [dbo].[Payments]

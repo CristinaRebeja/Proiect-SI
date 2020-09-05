@@ -248,10 +248,10 @@ GO
 ### Funcția `GetContractNumber` 
 
 Această funcție generează numerele de contracte (`Number` din tabelul `Contracts`).
-Acestea sunt de tip VARCHAR, și sunt formate din 3 litere (MPM) și 5 cifre.
+Acestea sunt de tip `VARCHAR`, și sunt formate din 3 litere (MPM) și 5 cifre.
 Funcția alocă primului contract numărul MPM00001.
-Pentru următoarele, verifică care este cel mai mare număr de contract (transformând partea numerică în tip INT), adaugă 1, 
-după care returnează rezultatul cu literele 'MPM' în față (transformând din nou șirul in VARCHAR).
+Pentru următoarele, verifică care este cel mai mare număr de contract (transformând partea numerică în tip `INT`), adaugă 1, 
+după care returnează rezultatul cu literele 'MPM' în față (transformând din nou șirul în `VARCHAR`).
 
 ```sql
 CREATE FUNCTION GetContractNumber()
