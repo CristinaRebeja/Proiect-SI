@@ -212,19 +212,20 @@ go
 --PROCEDURA STOCATA CE ADAUGA TAXA LUNARA IN BALANTA CONTRACTELOR ACTIVE
 
 CREATE PROCEDURE MonthlyFee 
-	--@TransactionType INT = 2 --MonthlyFee
 AS
 	BEGIN
 		SET NOCOUNT ON
-
+		--@TransactionType INT = 2 --MonthlyFee
 		INSERT INTO [dbo].[ContractBalanceTransactions] (ContractId, TransactionTypeId, Amount)
 		SELECT C.ContractId, 2, -S.Fee
 		FROM Contracts C
 			JOIN Subscriptions S ON C.SubscriptionId=S.SubscriptionId
 			JOIN ContractStatuses CS ON CS.StatusId=C.StatusId
 		WHERE CS.Name='Active'
-
 	END
+GO
+
+EXEC MonthlyFee
 
 --TRIGGER - INSEREAZA TRANZACTII CAND SE INSEREAZA/STERG PLATI
 CREATE TRIGGER InsertPaymentTransaction
@@ -245,8 +246,10 @@ AS
 
 INSERT INTO [dbo].[Payments] (ContractId, PaymentTypeId, RegistrationDate, Amount, ExternalReference, UserId)
 VALUES (1, 2, '2020-07-05', '20', 'ING', 125);
-
-
+INSERT INTO [dbo].[Payments] (ContractId, PaymentTypeId, RegistrationDate, Amount, ExternalReference, UserId)
+VALUES (2, 2, '2020-09-05', '35', 'BCR', 125);
+INSERT INTO [dbo].[Payments] (ContractId, PaymentTypeId, RegistrationDate, Amount, ExternalReference, UserId)
+VALUES (1, 2, '2020-08-25', '10', 'ING', 123);
 GO
 
 
