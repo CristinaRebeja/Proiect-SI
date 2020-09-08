@@ -389,3 +389,38 @@ AS
       FROM   deleted AS D;
   END
 ```
+
+## View `vwContractDetails`
+
+Am creat un view în care putem vedea mai multe detalii despre un anumit contract, în același loc (inclusiv soldul contractului).
+
+```sql
+CREATE VIEW vwContractDetails
+AS
+  SELECT	C.Number AS Contract_Number, 
+			S.Name AS Subscription, 
+			CS.Name Contract_Status,
+			CL.FirstName AS First_Name, 
+			CL.LastName AS Last_Name,
+			CL.PhoneNumber AS Phone,
+			C.StartDate AS Start_Date,
+			C.EndDate AS End_Date,
+			(SELECT SUM(Amount) FROM ContractBalanceTransactions 
+			WHERE ContractId=C.ContractId
+			GROUP BY ContractId) as Balance
+  FROM Clients CL
+	JOIN Contracts C ON C.ClientId=CL.ClientId
+	JOIN Subscriptions S ON S.SubscriptionId=C.SubscriptionId
+	JOIN ContractStatuses CS ON CS.StatusId=C.StatusId
+GO
+```
+Exemplu:
+
+```sql
+SELECT * FROM [dbo].[vwContractDetails] 
+	WHERE Contract_Number='MPM000ls';
+```
+
+|Contract_Number|Subscription|Contract_Status|First_Name|Last_Name|Phone|Start_Date|End_Date|Balance|
+|---------------|------------|---------------|----------|---------|-----|----------|--------|-------|
+|MPM00003|CATV|Active|Toparceanu|George|07823543|2020-04-01|NULL|-35.0000|
