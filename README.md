@@ -2,6 +2,9 @@
 Acest proiect presupune realizarea unei baze de date pentru a facilita gestionarea unei firme ce oferă servicii de Internet/Tv.
 Proiectul este realizat în SQL Server Management Studio.
 
+## Schema bazei de date
+![Schema bazei de date](./images/db-schema.png)
+
 ## Tabele
 Secțiunea curentă descrie tabelele din proiect
 
